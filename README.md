@@ -72,7 +72,7 @@ pub fn transfer_claim(
     proof: Vec<u8>,
     to: T::AccountId,
 ) -> DispatchResult {
-    // 获取原存证的所有者
+    // 获取当前操作的用户
     let sender = ensure_signed(origin)?;
 
     // 判断存证是否存在，如果不存在则抛出 NoSuchProof 错误
