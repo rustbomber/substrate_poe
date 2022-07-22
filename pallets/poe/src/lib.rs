@@ -6,7 +6,7 @@ pub use pallet::*;
 #[frame_support::pallet]
 pub mod pallet {
 	use frame_support::{dispatch::DispatchResult, pallet_prelude::*};
-	use frame_system::pallet_prelude::*;
+	use frame_system::{pallet_prelude::*, Account};
 	use sp_std::vec::Vec; // Step 3.1 will include this in `Cargo.toml`
 
 	#[pallet::config]
@@ -20,6 +20,8 @@ pub mod pallet {
 		ClaimCreated(T::AccountId, Vec<u8>),
 		/// Event emitted when a claim is revoked by the owner. [who, claim]
 		ClaimRevoked(T::AccountId, Vec<u8>),
+		/// 存证转移事件
+		ClaimTransferred(T::AccountId, Vec<u8>),
 	}
 
 	#[pallet::error] // <-- Step 4. code block will replace this.Å
@@ -84,6 +86,34 @@ pub mod pallet {
 
 			// Emit an event that the claim was erased.
 			Self::deposit_event(Event::ClaimRevoked(sender, proof));
+			Ok(())
+		}
+
+		#[pallet::weight(10_000)]
+		pub fn transfer_claim(
+			origin: OriginFor<T>,
+			proof: Vec<u8>,
+			to: T::AccountId,
+		) -> DispatchResult {
+			// 获取原存证的所有者
+			let sender = ensure_signed(origin)?;
+
+			// 判断存证是否存在，如果不存在则抛出 NoSuchProof 错误
+			ensure!(Proofs::<T>::contains_key(&proof), Error::<T>::NoSuchProof);
+
+			// 取出存证
+			let (owner, block_number) = Proofs::<T>::get(&proof);
+			ensure!(sender == owner, Error::<T>::NotProofOwner);
+
+			// 删除原所有者的存证
+			Proofs::<T>::remove(&proof);
+
+			// 将存证转移给新用户
+			Proofs::<T>::insert(&proof, (to, block_number));
+
+			// 触发事件
+			Self::deposit_event(Event::ClaimTransferred(sender, proof));
+
 			Ok(())
 		}
 	}
