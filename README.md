@@ -36,10 +36,6 @@ substrate入门第5课作业，本作业分为两个部分：
 
 ## 第二部分：转移存证
 
-### 原用户创建存证
-
-![](https://github.com/rustbomber/substrate_poe/blob/main/images/transfer_create_poe.png)
-
 ### 原用户转移存证
 
 ![](https://github.com/rustbomber/substrate_poe/blob/main/images/transfer_poe.png)
@@ -48,7 +44,7 @@ substrate入门第5课作业，本作业分为两个部分：
 
 存证的用户从 Alice (5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY) 变成了 Bob (5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty)
 
-![](https://github.com/rustbomber/substrate_poe/blob/main/images/transfer_poe.png)
+![](https://github.com/rustbomber/substrate_poe/blob/main/images/query_after_transfer.png)
 
 ### 转移后，原用户撤销-抛出错误
 
